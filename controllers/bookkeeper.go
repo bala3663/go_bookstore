@@ -291,12 +291,14 @@ func Book_price() gin.HandlerFunc {
 			var BookNo int
 			var BookName string
 			var BookPrice int
+			var Discount int
 			var BookId int
-			err = results.Scan(&BookNo, &BookName, &BookPrice, &BookId)
+
+			err = results.Scan(&BookNo, &BookName, &BookPrice, &Discount, &BookId)
 			if err != nil {
 				panic(err.Error())
 			}
-			output = fmt.Sprintf("%d '%s' %d %d ", BookNo, BookName, BookPrice, BookId)
+			output = fmt.Sprintf("%d '%s' %d %d %d ", BookNo, BookName, BookPrice, Discount, BookId)
 			c.IndentedJSON(200, "Book")
 			c.JSON(http.StatusOK, gin.H{"": output})
 		}
@@ -319,7 +321,7 @@ func Update_book_Price() gin.HandlerFunc {
 		if err != nil {
 			return
 		}
-		query_data := fmt.Sprintf(`INSERT INTO BookPrice (BookNo,BookName,BookPrice,BookId) VALUES(%d,"%s", %d, %d)`, Update_book_Price.BookId, Update_book_Price.BookName, Update_book_Price.BookPrice, Update_book_Price.BookId)
+		query_data := fmt.Sprintf(`INSERT INTO bookprice (BookNo,BookName,BookPrice,Discount,BookId) VALUES(%d,"%s", %d, %d,%d)`, Update_book_Price.BookId, Update_book_Price.BookName, Update_book_Price.BookPrice, Update_book_Price.Discount, Update_book_Price.BookId)
 
 		insert, err := db.Query(query_data)
 		if err != nil {
@@ -346,7 +348,7 @@ func Book_Awards() gin.HandlerFunc {
 		if err != nil {
 			return
 		}
-		query_data := fmt.Sprintf(`INSERT INTO bookawards (BookNumber,BookName,Year,Award,BookId) VALUES(%d,"%s", %d, "%s",%d)`, Book_Awards.BookNunber, Book_Awards.BookName, Book_Awards.Year, Book_Awards.Award, Book_Awards.BookId)
+		query_data := fmt.Sprintf(`INSERT INTO bookawards (BookNumber,BookName,Year,Award,book_category,summary,BookId) VALUES(%d,"%s", %d, "%s","%s","%s",%d)`, Book_Awards.BookNunber, Book_Awards.BookName, Book_Awards.Year, Book_Awards.Award, Book_Awards.Book_category, Book_Awards.Summary, Book_Awards.BookId)
 
 		insert, err := db.Query(query_data)
 		if err != nil {
@@ -382,13 +384,15 @@ func Book_Infor() gin.HandlerFunc {
 			var BookName string
 			var Year int
 			var Award string
+			var Book_category string
+			var Summary string
 			var BookId int
 
-			err = results.Scan(&BookNumber, &BookName, &Year, &Award, &BookId)
+			err = results.Scan(&BookNumber, &BookName, &Year, &Award, &Book_category, &Summary, &BookId)
 			if err != nil {
 				panic(err.Error())
 			}
-			output = fmt.Sprintf("%d '%s' %d '%s' %d ", BookId, BookName, Year, Award, BookId)
+			output = fmt.Sprintf("%d '%s' %d '%s' '%s' '%s'  %d ", BookNumber, BookName, Year, Award, Book_category, Summary, BookId)
 			c.IndentedJSON(200, "Book")
 			c.JSON(http.StatusOK, gin.H{"": output})
 		}
