@@ -19,7 +19,7 @@ func Get_books() gin.HandlerFunc {
 			panic(err.Error())
 		}
 		defer db.Close()
-		results, err := db.Query("SELECT * FROM bookmanagement")
+		results, err := db.Query("SELECT * FROM bookstable")
 		if err != nil {
 			panic(err.Error())
 		}
@@ -60,7 +60,7 @@ func Post_book() gin.HandlerFunc {
 		if err != nil {
 			return
 		}
-		query_data := fmt.Sprintf(`INSERT INTO bookmanagement (BookId,BookName,AuthorName,Publication,Year) VALUES(%d,"%s","%s","%s",%d)`, new_book.BookId, new_book.BookName, new_book.AuthorName, new_book.Publication, new_book.Year)
+		query_data := fmt.Sprintf(`INSERT INTO bookstable (BookId,BookName,AuthorName,Publication,Year) VALUES(%d,"%s","%s","%s",%d)`, new_book.BookId, new_book.BookName, new_book.AuthorName, new_book.Publication, new_book.Year)
 
 		insert, err := db.Query(query_data)
 		if err != nil {
@@ -88,7 +88,7 @@ func Update_book() gin.HandlerFunc {
 		if err != nil {
 			return
 		}
-		query := fmt.Sprintf("UPDATE bookmanagement SET BookName = '%s',AuthorName = '%s',Publication ='%s',year = '%d' WHERE BookId = '%d' ", edit_book.BookName, edit_book.AuthorName, edit_book.Publication, edit_book.Year, edit_book.BookId)
+		query := fmt.Sprintf("UPDATE bookstable SET BookName = '%s',AuthorName = '%s',Publication ='%s',year = '%d' WHERE BookId = '%d' ", edit_book.BookName, edit_book.AuthorName, edit_book.Publication, edit_book.Year, edit_book.BookId)
 		_, err = db.Exec(query)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -111,7 +111,7 @@ func Delete_book() gin.HandlerFunc {
 		if err != nil {
 			return
 		}
-		query := fmt.Sprintf(" DELETE FROM bookmanagement WHERE BookId=%d ", delete_book.BookId)
+		query := fmt.Sprintf(" DELETE FROM bookstable WHERE BookId=%d ", delete_book.BookId)
 		_, err = db.Query(query)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -132,7 +132,7 @@ func Search_book_id() gin.HandlerFunc {
 		if err != nil {
 			return
 		}
-		query_data := fmt.Sprintf("SELECT * FROM bookmanagement WHERE BookId='%d'", search_byid.BookId)
+		query_data := fmt.Sprintf("SELECT * FROM bookstable WHERE BookId='%d'", search_byid.BookId)
 		results, err := db.Query(query_data)
 		if err != nil {
 			panic(err.Error())
@@ -169,7 +169,7 @@ func Search_book_name() gin.HandlerFunc {
 		if err != nil {
 			return
 		}
-		query_data := fmt.Sprintf("SELECT * FROM bookmanagement WHERE BookName='%s'", search_by_name.BookName)
+		query_data := fmt.Sprintf("SELECT * FROM bookstable WHERE BookName='%s'", search_by_name.BookName)
 		results, err := db.Query(query_data)
 		if err != nil {
 			panic(err.Error())
@@ -206,7 +206,7 @@ func Search_book_publication() gin.HandlerFunc {
 		if err != nil {
 			return
 		}
-		query_data := fmt.Sprintf("SELECT * FROM bookmanagement WHERE Publication ='%s'", search_book_publication.Publication)
+		query_data := fmt.Sprintf("SELECT * FROM bookstable WHERE Publication ='%s'", search_book_publication.Publication)
 		results, err := db.Query(query_data)
 		if err != nil {
 			panic(err.Error())
@@ -243,7 +243,7 @@ func Publication_Year() gin.HandlerFunc {
 		if err != nil {
 			return
 		}
-		query_data := fmt.Sprintf("SELECT * FROM bookmanagement WHERE Year  BETWEEN '%d' AND '%d'", publication_year.Year, publication_year.Year+5)
+		query_data := fmt.Sprintf("SELECT * FROM bookstable WHERE Year  BETWEEN '%d' AND '%d'", publication_year.Year, publication_year.Year+5)
 		results, err := db.Query(query_data)
 		if err != nil {
 			panic(err.Error())
