@@ -14,3 +14,11 @@ type Info1 struct {
 	BookPrice int
 	BookId    int
 }
+
+type Info2 struct {
+	BookNunber int
+	BookName   string
+	Year       int
+	Award      string
+	BookId     int
+}

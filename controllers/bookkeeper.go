@@ -331,3 +331,68 @@ func Update_book_Price() gin.HandlerFunc {
 	}
 
 }
+
+func Book_Awards() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		db, err := sql.Open("mysql", "root:india@123@tcp(127.0.0.1:3306)/studentinfor")
+		if err != nil {
+			panic(err.Error())
+		}
+		defer db.Close()
+
+		var Book_Awards models.Info2
+		err = c.BindJSON(&Book_Awards)
+		if err != nil {
+			return
+		}
+		query_data := fmt.Sprintf(`INSERT INTO bookawards (BookNumber,BookName,Year,Award,BookId) VALUES(%d,"%s", %d, "%s",%d)`, Book_Awards.BookNunber, Book_Awards.BookName, Book_Awards.Year, Book_Awards.Award, Book_Awards.BookId)
+
+		insert, err := db.Query(query_data)
+		if err != nil {
+			panic(err.Error())
+		}
+
+		defer insert.Close()
+		c.IndentedJSON(201, "Yes, values added!")
+	}
+
+}
+
+func Book_Infor() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		db, err := sql.Open("mysql", "root:india@123@tcp(127.0.0.1:3306)/studentinfor")
+		if err != nil {
+			panic(err.Error())
+		}
+		var Book_Infor models.Info2
+		err = c.BindJSON(&Book_Infor)
+		if err != nil {
+			return
+		}
+		query_data := fmt.Sprintf("SELECT * FROM bookawards WHERE Award ='%s'", Book_Infor.Award)
+		results, err := db.Query(query_data)
+		if err != nil {
+			panic(err.Error())
+		}
+		defer results.Close()
+		var output interface{}
+		for results.Next() {
+			var BookNumber int
+			var BookName string
+			var Year int
+			var Award string
+			var BookId int
+
+			err = results.Scan(&BookNumber, &BookName, &Year, &Award, &BookId)
+			if err != nil {
+				panic(err.Error())
+			}
+			output = fmt.Sprintf("%d '%s' %d '%s' %d ", BookId, BookName, Year, Award, BookId)
+			c.IndentedJSON(200, "Book")
+			c.JSON(http.StatusOK, gin.H{"": output})
+		}
+
+	}
+
+}

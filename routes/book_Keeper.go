@@ -19,4 +19,6 @@ func Book_keeperRoutes(incomingRoutes *gin.Engine) {
 	incomingRoutes.GET("/publication_year", controller.Publication_Year())
 	incomingRoutes.GET("/book_price", controller.Book_price())
 	incomingRoutes.POST("/update_book_price", controller.Update_book_Price())
+	incomingRoutes.POST("/book_awards", controller.Book_Awards())
+	incomingRoutes.GET("/book_infor", controller.Book_Infor())
 }
